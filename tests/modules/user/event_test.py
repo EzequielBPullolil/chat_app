@@ -6,12 +6,12 @@ class TestUserEvents:
             without auth param refuse connection 
         '''
         sio.connect(namespace='/users')
-        assert sio.is_connected() == False
+        assert sio.is_connected(namespace='/users') == False
 
         sio.connect(namespace='/users', auth={
             'name': 'test'
         })
-        assert sio.is_connected() == True
+        assert sio.is_connected(namespace='/users') == True
 
     def test_send_message_emits_new_message(self, sios):
         '''
@@ -21,8 +21,12 @@ class TestUserEvents:
         expected_message = 'hi'
         client1 = sios[0]
         client2 = sios[1]
-        client1.connect(namespace='/users')
-        client2.connect(namespace='/users')
+        client1.connect(namespace='/users', auth={
+            "name": 'test'
+        })
+        client2.connect(namespace='/users', auth={
+            "name": 'test'
+        })
         assert client1.is_connected(namespace='/users') == True
         assert client2.is_connected(namespace='/users') == True
 
