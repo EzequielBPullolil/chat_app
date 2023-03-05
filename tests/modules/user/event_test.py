@@ -32,9 +32,9 @@ class TestUserEvents:
 
         client1.emit('send_message', {
             "message": expected_message,
-            "user": "client1"
+            "username": "client1"
         }, namespace='/users')
         received = client1.get_received(namespace='/users')
         assert received[0]['name'] == 'new_message'
         assert received[0]['args'][0]['message'] == expected_message
-        assert received[0]['args'][0]['user'] == 'client1'
+        assert received[0]['args'][0]['username'] == 'client1'
