@@ -23,3 +23,19 @@ def sio(app):
         flask_test_client=flask_client
     )
     return sio
+
+@pytest.fixture()
+def sios(app):
+    sios = []
+    for i in range(2):
+        flask_client = app.test_client()
+        sio = socketio.test_client(
+            app=app,
+            flask_test_client=flask_client
+        )
+
+        sios.append(sio)
+        del sio
+        del flask_client
+    
+    return sios
