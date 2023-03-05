@@ -4,10 +4,11 @@ class UserNamespace(Namespace):
     def on_connect(self, auth):
         if(auth == None): raise ConnectionRefusedError()
 
-    def on_send_message(self, message):
+    def on_send_message(self, data):
         '''
-            Emits new_message event to 
-            all users in the same room
+            Emits event new_message and send
+            dict with username and message sended
         '''
 
-        emit('new_message', message)
+        print(f'User with username: "{data["username"]}" send message: "{data["message"]}"')
+        emit('new_message',data)
