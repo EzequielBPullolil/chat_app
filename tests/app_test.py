@@ -4,4 +4,5 @@ class TestApp:
             Verify client connection 
         '''
 
-        assert sio.connected == True
+        sio.connect()
+        assert sio.is_connected() == True
