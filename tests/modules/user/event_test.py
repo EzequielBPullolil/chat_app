@@ -22,15 +22,19 @@ class TestUserEvents:
         client1 = sios[0]
         client2 = sios[1]
         client1.connect(namespace='/users', auth={
-            "name": 'test'
+            "name": 'client1'
         })
         client2.connect(namespace='/users', auth={
-            "name": 'test'
+            "name": 'client2'
         })
         assert client1.is_connected(namespace='/users') == True
         assert client2.is_connected(namespace='/users') == True
 
-        client1.emit('send_message', expected_message, namespace='/users')
+        client1.emit('send_message', {
+            "message": expected_message,
+            "user": "client1"
+        }, namespace='/users')
         received = client1.get_received(namespace='/users')
         assert received[0]['name'] == 'new_message'
-        assert received[0]['args'][0] == expected_message
+        assert received[0]['args'][0]['message'] == expected_message
+        assert received[0]['args'][0]['user'] == 'client1'
