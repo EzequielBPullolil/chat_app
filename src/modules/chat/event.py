@@ -3,11 +3,19 @@ from flask import request
 
 
 class ChatNamespace(Namespace):
-    globalid = 'chatidexample'
 
     def on_send_message(self, data):
-        emit('new_message', data, to=self.globalid)
+        '''
+            Emits to all users in the same chat 
+            the event 'new_message' 
+        '''
 
-    def on_connect(self):
-        join_room(self.globalid)
-        print(f'user enter to room')
+        if (data['chatid'] == None):
+            raise Exception('Missing chatid')
+        emit('new_message', {
+            'username': data['username'],
+            'message': data['message']
+        }, to=data['chatid'])
+
+    def join_chat(self, chatid):
+        join_room(chatid)
