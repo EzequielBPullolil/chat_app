@@ -1,5 +1,4 @@
 from flask_socketio import SocketIO
-from flask_cors import CORS
 from flask import Flask
 from os import environ
 from .modules.user.event import UserNamespace
@@ -8,7 +7,6 @@ socketio = SocketIO(logger=debbug, engineio_logger=debbug)
 
 app = Flask(__name__)
 socketio.init_app(app,  cors_allowed_origins="*")
-CORS(app)
 
     #namespaces implement
 socketio.on_namespace(UserNamespace('/users'))
