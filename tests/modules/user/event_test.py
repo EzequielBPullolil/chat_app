@@ -1,4 +1,3 @@
-from flask_socketio import ConnectionRefusedError
 class TestUserEvents:
     def test_cant_connect_without_auth_params(self, sio):
         '''
