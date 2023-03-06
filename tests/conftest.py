@@ -1,6 +1,7 @@
 import pytest
 from src.app import app, socketio
 
+
 @pytest.fixture()
 def flask_app():
     global app
@@ -9,6 +10,7 @@ def flask_app():
     })
 
     yield app
+
 
 @pytest.fixture()
 def client(flask_app):
@@ -24,10 +26,11 @@ def sio(flask_app):
     )
     return sio
 
+
 @pytest.fixture()
 def sios(flask_app):
     sios = []
-    for i in range(2):
+    for i in range(3):
         flask_client = flask_app.test_client()
         sio = socketio.test_client(
             app=flask_app,
@@ -37,5 +40,10 @@ def sios(flask_app):
         sios.append(sio)
         del sio
         del flask_client
-    
+
     return sios
+
+
+@pytest.fixture()
+def chatid():
+    return 'an test id'
