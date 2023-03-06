@@ -13,7 +13,7 @@ class TestUserEvents:
         })
         assert sio.is_connected(namespace='/users') == True
 
-    def test_send_message_emits_new_message(self, sios):
+    def test_send_message_emits_new_message_event(self, sios):
         '''
             Verify if user emits event 'send_message' to namespace /users 
             the server emits 'new_message' to all users 
