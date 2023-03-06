@@ -1,9 +1,9 @@
 import pytest
-from src.app import create_app, socketio
+from src.app import app, socketio
 
 @pytest.fixture()
-def app():
-    app = create_app()
+def flask_app():
+    global app
     app.config.update({
         'TESTING': True
     })
@@ -11,26 +11,26 @@ def app():
     yield app
 
 @pytest.fixture()
-def client(app):
+def client(flask_app):
     return app.test_client()
 
 
 @pytest.fixture()
-def sio(app):
-    flask_client = app.test_client()
+def sio(flask_app):
+    flask_client = flask_app.test_client()
     sio = socketio.test_client(
-        app=app,
+        app=flask_app,
         flask_test_client=flask_client
     )
     return sio
 
 @pytest.fixture()
-def sios(app):
+def sios(flask_app):
     sios = []
     for i in range(2):
-        flask_client = app.test_client()
+        flask_client = flask_app.test_client()
         sio = socketio.test_client(
-            app=app,
+            app=flask_app,
             flask_test_client=flask_client
         )
 
