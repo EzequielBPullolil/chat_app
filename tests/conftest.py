@@ -4,13 +4,14 @@ from src.databases.mongodb import chat
 
 
 @pytest.fixture()
-def chat_suject_id():
+def chat_suject():
     result = chat.insert_one({
         'name': 'chat_test',
+        'members': [],
         'messages': []
     })
 
-    return str(result.inserted_id)
+    return result
 
 
 @pytest.fixture()
