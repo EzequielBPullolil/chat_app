@@ -9,7 +9,6 @@ class ChatNamespace(Namespace):
             Emits to all users in the same chat 
             the event 'new_message' 
         '''
-
         if (data['chatid'] == None):
             raise Exception('Missing chatid')
         emit('new_message', {
@@ -17,5 +16,6 @@ class ChatNamespace(Namespace):
             'message': data['message']
         }, to=data['chatid'])
 
-    def join_chat(self, chatid):
+    def on_join_chat(self, chatid):
         join_room(chatid)
+        print(f'user join to chat {chatid}')
