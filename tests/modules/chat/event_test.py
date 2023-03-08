@@ -58,30 +58,40 @@ class TestChatEvents:
         assert received[0]['name'] == 'new_message'
         assert received[0]['args'][0]['username'] == 'client1'
 
-    def test_users_who_arent_part_of_chat_no_receive_new_message_event(self, sios, chat_suject):
+    def test_users_who_arent_part_of_chat_no_receive_new_message_event(self, sios, chat_memebers):
         '''
             Check if only the users in the same chat receive the event
             'new_message'
         '''
-        chatid = str(chat_suject.inserted_id)
-        client1 = sios[0]
-        client2 = sios[1]
+        chatid = chat_memebers['chat_id']
+        client1_sio = sios[0]
+        client2_sio = sios[1]
         client_out_of_chat = sios[2]
+        client1_id = chat_memebers['members'][0]
+        client2_id = chat_memebers['members'][1]
 
         # clients join chat
-        client1.connect(namespace='/chats')
-        client2.connect(namespace='/chats')
+        client1_sio.connect(namespace='/chats')
+        client2_sio.connect(namespace='/chats')
         client_out_of_chat.connect(namespace='/chats')
 
         # verify clients connection
-        assert client1.is_connected() == True
-        assert client2.is_connected() == True
+        assert client1_sio.is_connected() == True
+        assert client2_sio.is_connected() == True
         assert client_out_of_chat.is_connected() == True
         # client1 and client2 join chat
-        client1.emit('join_chat', chatid, namespace='/chats')
-        client2.emit('join_chat', chatid, namespace='/chats')
+        client1_sio.emit('join_chat',
+                         {
+                             'chat_id': chatid,
+                             'user_id': client1_id
+                         }, namespace='/chats')
+        client2_sio.emit('join_chat',
+                         {
+                             'chat_id': chatid,
+                             'user_id': client2_id
+                         }, namespace='/chats')
         # client emit message
-        client1.emit('send_message', {
+        client1_sio.emit('send_message', {
             'message': 'hi',
             'username': 'client1',
             'chatid': chatid
