@@ -17,33 +17,42 @@ class TestChatEvents:
             }, namespace='/chats')
             assert exception.type is UnauthorizedUser
 
-    def test_send_messsage_to_chat(self, sios, chat_suject):
+    def test_send_messsage_to_chat(self, sios, chat_memebers):
         '''
             Emit send_message event in chat namespace
             catch chats id and emit new_message to
             all users in the same chat
         '''
-        chatid = str(chat_suject.inserted_id)
-        client1 = sios[0]
-        client2 = sios[1]
+        chatid = chat_memebers['chat_id']
+        client1_sio = sios[0]
+        client2_sio = sios[1]
+
+        client1_id = chat_memebers['members'][0]
+        client2_id = chat_memebers['members'][1]
 
         # users connect socket
-        client1.connect(namespace='/chats')
-        assert client1.is_connected() == True
-        client2.connect(namespace='/chats')
-        assert client2.is_connected() == True
+        client1_sio.connect(namespace='/chats')
+        assert client1_sio.is_connected() == True
+        client2_sio.connect(namespace='/chats')
+        assert client2_sio.is_connected() == True
 
         # users join chat
-        client1.emit('join_chat', chatid, namespace='/chats')
-        client2.emit('join_chat', chatid, namespace='/chats')
+        client1_sio.emit('join_chat', {
+            'user_id': client1_id,
+            'chat_id': chatid
+        }, namespace='/chats')
+        client2_sio.emit('join_chat', {
+            'user_id': client2_id,
+            'chat_id': chatid
+        }, namespace='/chats')
 
-        client1.emit('send_message', {
+        client1_sio.emit('send_message', {
             'message': 'hi',
             'username': 'client1',
             'chatid': chatid
         }, namespace='/chats')
 
-        received = client2.get_received(namespace='/chats')
+        received = client2_sio.get_received(namespace='/chats')
         print(received)
 
         assert received[0]['name'] == 'new_message'

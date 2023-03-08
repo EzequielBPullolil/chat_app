@@ -1,3 +1,4 @@
+from bson import ObjectId
 import pytest
 from src.app import app, socketio
 from src.databases.mongodb import chat
@@ -12,6 +13,29 @@ def chat_suject():
     })
 
     return result
+
+
+@pytest.fixture()
+def chat_memebers():
+    members = [
+        {
+            '_id': ObjectId(),
+            'name': 'client1'
+        },
+        {
+            '_id': ObjectId(),
+            'name': 'client2'
+        }
+    ]
+    result = chat.insert_one({
+        'name': 'chat_test',
+        'members': members,
+        'messages': []
+    })
+    return {
+        'chat_id': str(result.inserted_id),
+        'members': [str(members[0]['_id']), str(members[1]['_id'])]
+    }
 
 
 @pytest.fixture()
