@@ -1,5 +1,16 @@
 import pytest
 from src.app import app, socketio
+from src.databases.mongodb import chat
+
+
+@pytest.fixture()
+def chat_suject_id():
+    result = chat.insert_one({
+        'name': 'chat_test',
+        'messages': []
+    })
+
+    return str(result.inserted_id)
 
 
 @pytest.fixture()
@@ -42,8 +53,3 @@ def sios(flask_app):
         del flask_client
 
     return sios
-
-
-@pytest.fixture()
-def chatid():
-    return 'an test id'
