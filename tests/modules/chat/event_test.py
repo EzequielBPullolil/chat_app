@@ -5,7 +5,7 @@ class TestChatEvents:
             catch chats id and emit new_message to
             all users in the same chat
         '''
-        chatid = 'asdasbasd'
+        chatid = 'test'
         client1 = sios[0]
         client2 = sios[1]
 
@@ -16,8 +16,8 @@ class TestChatEvents:
         assert client2.is_connected() == True
 
         # users join chat
-        client1.emit('join_chat', chatid)
-        client2.emit('join_chat', chatid)
+        client1.emit('join_chat', chatid, namespace='/chats')
+        client2.emit('join_chat', chatid, namespace='/chats')
 
         client1.emit('send_message', {
             'message': 'hi',
@@ -26,6 +26,7 @@ class TestChatEvents:
         }, namespace='/chats')
 
         received = client2.get_received(namespace='/chats')
+        print(received)
 
         assert received[0]['name'] == 'new_message'
         assert received[0]['args'][0]['username'] == 'client1'
@@ -50,8 +51,8 @@ class TestChatEvents:
         assert client2.is_connected() == True
         assert client_out_of_chat.is_connected() == True
         # client1 and client2 join chat
-        client1.emit('join_chat', chatid)
-        client2.emit('join_chat', chatid)
+        client1.emit('join_chat', chatid, namespace='/chats')
+        client2.emit('join_chat', chatid, namespace='/chats')
         # client emit message
         client1.emit('send_message', {
             'message': 'hi',
