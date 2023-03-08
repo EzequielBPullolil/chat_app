@@ -1,4 +1,6 @@
+from bson import ObjectId
 from pytest import raises
+
 from src.modules.chat.exceptions.unauthorized_user import UnauthorizedUser
 
 
@@ -7,12 +9,13 @@ class TestChatEvents:
         '''
             Check if user aren part of chat the event 'join_chat' raise exception
         '''
+        user_id = str(ObjectId())
         client1 = sio
         client1.connect(namespace='/chats')
         assert client1.is_connected() == True
         with raises(UnauthorizedUser) as exception:
             client1.emit('join_chat', {
-                'user_id': 'asdiasdiasdniasda',
+                'user_id': user_id,
                 'chat_id': str(chat_suject.inserted_id)
             }, namespace='/chats')
             assert exception.type is UnauthorizedUser
