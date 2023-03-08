@@ -4,6 +4,14 @@ from src.app import app, socketio
 from src.databases.mongodb import chat
 
 
+def pytest_configure():
+    '''
+        Delete all rows in databases
+    '''
+    chat.delete_many({})
+    print('all chats deleted')
+
+
 @pytest.fixture()
 def chat_suject():
     result = chat.insert_one({
@@ -17,6 +25,10 @@ def chat_suject():
 
 @pytest.fixture()
 def chat_memebers():
+    '''
+        Insert  chat with members and return
+        the chat _id and list of members ID
+    '''
     members = [
         {
             '_id': ObjectId(),
