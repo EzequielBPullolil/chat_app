@@ -37,3 +37,15 @@ class TestUsersBelongsToChatHelper:
             user_belongs_to_chat(user=user, chat=chat_param)
 
             assert e_info.message == f"the user with id {user['_id']} arent part of chat with id {chat_param['_id']}"
+
+    def test_parse_related_user_and_chat_return_true(self, chat_memebers):
+
+        user = {
+            '_id': ObjectId(chat_memebers['members'][0])
+        }
+
+        chat_param = chat.find_one(
+            filter={
+                '_id': ObjectId(chat_memebers['chat_id'])
+            })
+        assert user_belongs_to_chat(chat=chat_param, user=user) == True
