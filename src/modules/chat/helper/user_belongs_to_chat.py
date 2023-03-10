@@ -4,26 +4,28 @@ from bson import ObjectId
 from ..exceptions.unauthorized_user import UnauthorizedUser
 
 
-def user_belongs_to_chat(chat_id, user_id):
+def user_belongs_to_chat(chat, user):
     '''
-        Return true if user are member of chat with chat_id
+        iterate the members property and
+        check that the user parameter is in the list
 
-        chat_id and user_id has to be a no ObjectId instance
+        @param chat DICT
+        @param user DICT
+
+        @error UnauthorizedUser
+        @return True
     '''
-    if (type(chat_id) == ObjectId):
-        raise Exception('chat_id must be non ObjectID param')
 
-    if (type(user_id) == ObjectId):
-        raise Exception('user_id must be non ObjectID param')
+    if (type(chat) != dict):
+        raise ValueError("the 'chat' parameter is not a dict")
 
-    chatid = ObjectId(chat_id)
-    userid = ObjectId(user_id)
-    result = chat.find_one(filter={'_id': chatid})
+    if (type(user) != dict):
+        raise ValueError("the 'user' paramter is not a dict")
 
-    members = result['members']
-
-    for user in members:
-        if (userid == user['_id']):
+    members = chat['members']
+    for user_i in members:
+        print(user_i)
+        if (user_i['_id'] == user['_id']):
             return True
 
-    raise UnauthorizedUser(chat_id=chat_id, user_id=user_id)
+    raise UnauthorizedUser(chat_id=chat['_id'], user_id=user['_id'])
