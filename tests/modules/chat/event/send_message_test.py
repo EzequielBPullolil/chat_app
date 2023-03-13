@@ -34,3 +34,21 @@ class TestSendMessageEvent:
                 'chat_id': 'asdasd'
             }, namespace='/chats')
             assert 'missing message data param' in str(e_info.value)
+
+    def test_send_unrelated_chat_and_user_id_raise_exception(self, sio, chat_suject):
+        '''
+            check if send an fake user_id and persisted chat raise exception
+        '''
+
+        fake_user_id = str(ObjectId())
+        chat_id = str(chat_suject.inserted_id)
+
+        sio.connect(namespace='/chats')
+        assert sio.is_connected(namespace='/chats') == True
+        with pytest.raises(UnauthorizedUser) as e_info:
+            sio.emit('send_message', {
+                'chat_id': chat_id,
+                'user_id': fake_user_id,
+                'message': 'hi'
+            }, namespace='/chats')
+            assert e_info.type == UnauthorizedUser
