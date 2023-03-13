@@ -1,13 +1,17 @@
 # deps imports
+from bson import ObjectId
 from flask_socketio import Namespace, join_room, emit
 from flask import request
 
 # module imports
 from .helper.user_belongs_to_chat import user_belongs_to_chat
 
+from src.databases.mongodb import chat
+from .services.send_message import send_message
+
 
 class ChatNamespace(Namespace):
-    def on_send_message(self, data):
+    def on_send_message(self, data: dict):
         '''
             Emits to all users in the same chat
             the event 'new_message' and persist
@@ -21,10 +25,13 @@ class ChatNamespace(Namespace):
             user_id = data['user_id']
             chat_id = data['chat_id']
             message = data['message']
+
+            send_message(chat_id, user_id, message)
             emit('new_message', {
                 'username': data['username'],
                 'message': data['message']
             }, to=data['chatid'])
+
         except KeyError:
             if (data.get('user_id', True)):
                 raise ValueError('missing user_id data param')
