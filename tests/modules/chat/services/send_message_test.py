@@ -1,6 +1,7 @@
 from bson import ObjectId
 from src.modules.chat.services.send_message import send_message
 from src.modules.chat.exceptions.unauthorized_user import UnauthorizedUser
+from src.databases.mongodb import chat
 from pytest import raises
 
 
@@ -28,3 +29,29 @@ class TestSendMessageService:
                 chat_id=str(chat_suject.inserted_id)
             )
             assert e_info.type is UnauthorizedUser
+
+    def test_message_added_to_messages_chat_list(self, chat_memebers):
+        '''
+            Verify if send_message add a message to chat_suject
+        '''
+        user = chat_memebers['members'][0]
+        chat_id = chat_memebers['chat_id']
+
+        assert len(chat_memebers['messages']) == 0
+
+        send_message(message='hi', user_id=user, chat_id=chat_id)
+
+        result = chat.find_one(filter={'_id': ObjectId(chat_id)})
+
+        assert len(result['messages']) > 0
+
+    def test_parse_id_of_unauthorizeduser_not_update_messages(self, chat_suject):
+
+        chat_id = str(chat_suject.inserted_id)
+        fake_user_id = str(ObjectId())
+
+        with raises(UnauthorizedUser):
+            send_message(chat_id=chat_id, user_id=fake_user_id, message='hi')
+            result = chat.find_one(filter={'_id', chat_suject.inserted_id})
+
+            assert len(result['messages']) == 0
