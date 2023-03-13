@@ -10,11 +10,19 @@ class TestSendMessageService:
         '''
 
         with raises(ValueError) as e_info:
-            send_message({
-                'message': ''
-            })
+            send_message(
+                user_id='fake_user_id',
+                chat_id='fake_chat_id',
+                message=''
+            )
             assert e_info.message == 'invalid message value'
 
-        with raises(ValueError) as e_info:
-            send_message({})
-            assert e_info.message == 'missing message param'
+    def test_send_message_raise_error_if_user_no_belongs_to_chat(self, chat_suject):
+        fake_user_id = ObjectId()
+        with raises(UnauthorizedUser) as e_info:
+            send_message(
+                message='test_message',
+                user_id=str(fake_user_id),
+                chat_id=str(chat_suject.inserted_id)
+            )
+            assert e_info.type is UnauthorizedUser
