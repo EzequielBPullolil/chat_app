@@ -5,7 +5,7 @@ from pytest import raises
 
 
 class TestSendMessageService:
-    def test_call_send_message_and_parse_an_empty_message_raise_error(self):
+    def test_parse_an_empty_message_raise_error(self):
         '''
             check raises of function send_message when parses 
             an empty string or non parse message
@@ -19,7 +19,7 @@ class TestSendMessageService:
             )
             assert e_info.message == 'invalid message value'
 
-    def test_send_message_raise_error_if_user_no_belongs_to_chat(self, chat_suject):
+    def test_raise_error_if_user_no_belongs_to_chat(self, chat_suject):
         fake_user_id = ObjectId()
         with raises(UnauthorizedUser) as e_info:
             send_message(
