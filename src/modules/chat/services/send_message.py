@@ -14,6 +14,9 @@ def send_message(chat_id, user_id, message):
         3. create an instance of Message
         4. Find chat by id
         5. Add message instance to chat
+
+        @chat_id STRING
+        @user_Id STRING
     '''
 
     if (message == ''):
