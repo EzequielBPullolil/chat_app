@@ -17,12 +17,15 @@ class ChatNamespace(Namespace):
             2.verify if user belogns to chat
             3.persist menssage 
         '''
-        if (data['chatid'] == None):
-            raise Exception('Missing chatid')
-        emit('new_message', {
-            'username': data['username'],
-            'message': data['message']
-        }, to=data['chatid'])
+        try:
+            user_id = data['user_id']
+            emit('new_message', {
+                'username': data['username'],
+                'message': data['message']
+            }, to=data['chatid'])
+        except KeyError:
+            if (data.get('user_id', None) == None):
+                raise ValueError('missing user_id data param')
 
     def on_join_chat(self, data):
         '''
