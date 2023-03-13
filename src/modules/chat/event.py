@@ -20,6 +20,7 @@ class ChatNamespace(Namespace):
         try:
             user_id = data['user_id']
             chat_id = data['chat_id']
+            message = data['message']
             emit('new_message', {
                 'username': data['username'],
                 'message': data['message']
@@ -29,6 +30,8 @@ class ChatNamespace(Namespace):
                 raise ValueError('missing user_id data param')
             if (data.get('chat_id', True)):
                 raise ValueError('missing chat_id data param')
+            if (data.get('message', True)):
+                raise ValueError('missing message data param')
 
     def on_join_chat(self, data):
         '''
