@@ -5,7 +5,7 @@ from ..helper.user_belongs_to_chat import user_belongs_to_chat
 from src.databases.mongodb import chat
 
 
-def send_message(chat_id, user_id, message):
+def send_message(chat_id: str, user_id: str, message):
     '''
         Try to add message to persisted chat
 
@@ -23,11 +23,22 @@ def send_message(chat_id, user_id, message):
         raise ValueError('invalid message value')
 
     user = {
-        '_id': ObjectId(user_id)
+        '_id': ObjectId(user_id),
+        'name': 'temp_name'
     }
 
-    result = chat.find_one(filter={'_id': ObjectId(chat_id)})
+    chat_finded = chat.find_one(filter={'_id': ObjectId(chat_id)})
 
-    user_belongs_to_chat(
-        user=user, chat=result
-    )
+    user_belongs_to_chat(user=user, chat=chat_finded)
+
+    messages = chat_finded['messages']
+
+    messages.append({
+        '_id': ObjectId(),
+        'user': user['name'],
+        'text': message
+    })
+
+    chat.update_one(
+        filter={'_id': ObjectId(chat_id)},
+        update={"$set": {'messages': messages}})
