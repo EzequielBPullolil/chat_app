@@ -24,3 +24,13 @@ class TestSendMessageEvent:
                 'message': 'hi'
             }, namespace='/chats')
             assert 'missing chat_id data param' in str(e_info.value)
+
+    def test_missing_message_raise_exception(self, sio):
+        sio.connect(namespace='/chats')
+        assert sio.is_connected(namespace='/chats') == True
+        with pytest.raises(ValueError) as e_info:
+            sio.emit('send_message', {
+                'user_id': 'asdasdsads',
+                'chat_id': 'asdasd'
+            }, namespace='/chats')
+            assert 'missing message data param' in str(e_info.value)
