@@ -15,10 +15,11 @@ class ChatNamespace(Namespace):
 
             1.validate data entrys
             2.verify if user belogns to chat
-            3.persist menssage 
+            3.persist menssage
         '''
         try:
             user_id = data['user_id']
+            chat_id = data['chat_id']
             emit('new_message', {
                 'username': data['username'],
                 'message': data['message']
@@ -26,6 +27,8 @@ class ChatNamespace(Namespace):
         except KeyError:
             if (data.get('user_id', None) == None):
                 raise ValueError('missing user_id data param')
+            if (data.get('chat_id', None) == None):
+                raise ValueError('missing chat_id data param')
 
     def on_join_chat(self, data):
         '''
