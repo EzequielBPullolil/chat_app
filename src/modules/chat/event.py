@@ -10,7 +10,12 @@ class ChatNamespace(Namespace):
     def on_send_message(self, data):
         '''
             Emits to all users in the same chat
-            the event 'new_message'
+            the event 'new_message' and persist
+            the message parsed by data
+
+            1.validate data entrys
+            2.verify if user belogns to chat
+            3.persist menssage 
         '''
         if (data['chatid'] == None):
             raise Exception('Missing chatid')
