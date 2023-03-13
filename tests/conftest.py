@@ -46,7 +46,8 @@ def chat_memebers():
     })
     return {
         'chat_id': str(result.inserted_id),
-        'members': [str(members[0]['_id']), str(members[1]['_id'])]
+        'members': [str(members[0]['_id']), str(members[1]['_id'])],
+        'messages': []
     }
 
 
