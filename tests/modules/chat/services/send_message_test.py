@@ -1,4 +1,6 @@
+from bson import ObjectId
 from src.modules.chat.services.send_message import send_message
+from src.modules.chat.exceptions.unauthorized_user import UnauthorizedUser
 from pytest import raises
 
 

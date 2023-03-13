@@ -1,5 +1,8 @@
+from bson import ObjectId
 from ..exceptions.unauthorized_user import UnauthorizedUser
 from ..helper.user_belongs_to_chat import user_belongs_to_chat
+
+from src.databases.mongodb import chat
 
 
 def send_message(chat_id, user_id, message):
@@ -15,3 +18,13 @@ def send_message(chat_id, user_id, message):
 
     if (message == ''):
         raise ValueError('invalid message value')
+
+    user = {
+        '_id': ObjectId(user_id)
+    }
+
+    result = chat.find_one(filter={'_id': ObjectId(chat_id)})
+
+    user_belongs_to_chat(
+        user=user, chat=result
+    )
