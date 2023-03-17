@@ -35,11 +35,11 @@ class ChatNamespace(Namespace):
             }, to=data['chatid'])
 
         except KeyError:
-            if (data.get('user_id', True)):
+            if (not 'user_id' in data):
                 raise ValueError('missing user_id data param')
-            if (data.get('chat_id', True)):
+            if (not 'chat_id' in data):
                 raise ValueError('missing chat_id data param')
-            if (data.get('message', True)):
+            if (not 'message' in data):
                 raise ValueError('missing message data param')
 
     def on_join_chat(self, data):
