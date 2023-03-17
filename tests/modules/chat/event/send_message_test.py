@@ -40,6 +40,17 @@ class TestSendMessageEvent:
             }, namespace='/chats')
             assert 'missing message data param' in str(e_info.value)
 
+    def test_send_empty_message_raise_exception(self, sio):
+        sio.connect(namespace='/chats')
+        assert sio.is_connected(namespace='/chats') == True
+        with pytest.raises(ValueError) as e_info:
+            sio.emit('send_message', {
+                'user_id': 'asdasdsads',
+                'chat_id': 'asdasd',
+                'message': ''
+            }, namespace='/chats')
+            assert 'message cannot be an empty string' in str(e_info.value)
+
     def test_send_unrelated_chat_and_user_id_raise_exception(self, sio, chat_suject):
         '''
             check if send an fake user_id and persisted chat raise exception

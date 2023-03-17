@@ -25,6 +25,8 @@ class ChatNamespace(Namespace):
             user_id = data['user_id']
             chat_id = data['chat_id']
             message = data['message']
+            if (message == ''):
+                raise ValueError('cannot be an empty string')
 
             send_message(chat_id, user_id, message)
             emit('new_message', {
