@@ -82,7 +82,7 @@ def singed_nick():
     result = user.insert_one(
         {
             'name': 'test name',
-            'nick': f"@{nick}",
+            'nick': nick,
             'password': 'test_password'
         }
     )
