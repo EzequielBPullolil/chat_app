@@ -6,7 +6,7 @@ class TestPostUserRoutes:
     def test_valid_case(self, client):
         post_data = {
             'name': 'test name',
-            'nick': '@TestNick',
+            'nick': 'TestNick',
             'password': 'aPassword'
         }
         response = client.post('/users/', json=post_data)
@@ -22,7 +22,7 @@ class TestPostUserRoutes:
     def test_missing_password_data_response_status_400(self, client):
         post_data = {
             'name': 'test name',
-            'nick': '@TestNick'
+            'nick': 'TestNick'
         }
 
         response = client.post('/users/', json=post_data)
@@ -32,7 +32,7 @@ class TestPostUserRoutes:
     def test_missing_name_data_response_status_400(self, client):
         post_data = {
             'password': 'asd',
-            'nick': '@TestNick'
+            'nick': 'TestNick'
         }
 
         response = client.post('/users/', json=post_data)
@@ -48,3 +48,14 @@ class TestPostUserRoutes:
         response = client.post('/users/', json=post_data)
         assert response.status_code == 400
         assert response.json['error'] == 'missing nick payload data'
+
+    def test_send_already_singed_nick_response_status_400(self, client, singed_nick):
+        post_data = {
+            'name': 'test name',
+            'nick': singed_nick,
+            'password': 'aPassword'
+        }
+        response = client.post('/users/', json=post_data)
+
+        assert response.status_code == 400
+        assert response.json['error'] == f'the nick @{singed_nick} is already singed'
