@@ -21,3 +21,4 @@ class TestPostUserRoutes:
 
         response = client.post('/users/', json=post_data)
         assert response.status_code == 400
+        assert response.json['error'] == 'missing password payload data'
