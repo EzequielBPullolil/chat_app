@@ -22,3 +22,23 @@ class TestPostUserRoutes:
         response = client.post('/users/', json=post_data)
         assert response.status_code == 400
         assert response.json['error'] == 'missing password payload data'
+
+    def test_missing_name_data_response_status_400(self, client):
+        post_data = {
+            'password': 'asd',
+            'nick': '@TestNick'
+        }
+
+        response = client.post('/users/', json=post_data)
+        assert response.status_code == 400
+        assert response.json['error'] == 'missing name payload data'
+
+    def test_missing_nick_data_response_status_400(self, client):
+        post_data = {
+            'password': 'asd',
+            'name': 'test name'
+        }
+
+        response = client.post('/users/', json=post_data)
+        assert response.status_code == 400
+        assert response.json['error'] == 'missing nick payload data'
