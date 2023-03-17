@@ -1,9 +1,10 @@
 from bson import ObjectId
+from src.databases.mongodb import user
 
 
 class TestPostUserRoutes:
     # Root route
-    def test_valid_case(self, client):
+    def test_valid_case_persist_user(self, client):
         post_data = {
             'name': 'test name',
             'nick': 'TestNick',
@@ -18,6 +19,10 @@ class TestPostUserRoutes:
         assert ObjectId.is_valid(responsed_user['_id']) == True
         assert responsed_user['name'] == post_data['name']
         assert responsed_user['nick'] == post_data['nick']
+
+        assert user.find_one(filter={
+            '_id': ObjectId(responsed_user['_id'])
+        }) != None
 
     def test_missing_password_data_response_status_400(self, client):
         post_data = {
