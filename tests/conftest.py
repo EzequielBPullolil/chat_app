@@ -10,6 +10,8 @@ def pytest_configure():
     '''
     chat.delete_many({})
     print('all chats deleted')
+    user.delete_many({})
+    print('all users deleted')
 
 
 @pytest.fixture()
