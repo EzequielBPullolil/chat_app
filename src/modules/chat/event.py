@@ -30,9 +30,9 @@ class ChatNamespace(Namespace):
 
             send_message(chat_id, user_id, message)
             emit('new_message', {
-                'username': data['username'],
-                'message': data['message']
-            }, to=data['chatid'])
+                'username': 'temp name',
+                'message': message
+            }, to=chat_id)
 
         except KeyError:
             if (not 'user_id' in data):
