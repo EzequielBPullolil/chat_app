@@ -68,3 +68,29 @@ class TestSendMessageEvent:
                 'message': 'hi'
             }, namespace='/chats')
             assert e_info.type == UnauthorizedUser
+
+    def test_event_valid_case(self, sio, chat_memebers):
+        '''
+            We check that when the event is executed
+            correctly the sio[client] receives the 'new_message' event
+        '''
+        sio.connect(namespace='/chats')
+        assert sio.is_connected(namespace='/chats')
+
+        user_id = chat_memebers['members'][0]  # sets user_id related with chat
+        chat_id = chat_memebers['chat_id']
+
+        message = 'an chat message'
+        sio.emit('join_chat', {
+            'chat_id': chat_id,
+            'user_id': user_id
+        }, namespace='/chats')
+        sio.emit('send_message', {
+            'chat_id': chat_id,
+            'user_id': user_id,
+            'message': message
+        }, namespace='/chats')
+
+        received = sio.get_received(namespace='/chats')
+
+        assert received[0]['name'] == 'new_message'
