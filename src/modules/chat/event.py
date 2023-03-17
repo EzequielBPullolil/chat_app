@@ -47,9 +47,13 @@ class ChatNamespace(Namespace):
             Verify if user with data['user_id'] are part
             of members of the chat with id == data['chat_id']
         '''
-        user_id = data['user_id']
         chat_id = data['chat_id']
+        user_id = data['user_id']
+        user = {
+            '_id': ObjectId(user_id)
+        }
+        chat_param = chat.find_one(filter={'_id': ObjectId(chat_id)})
 
-        user_belongs_to_chat(user_id=user_id, chat_id=chat_id)
+        user_belongs_to_chat(chat=chat_param, user=user)
         join_room(chat_id)
         print(f'user: {user_id} join to chat: {chat_id}')
