@@ -78,11 +78,11 @@ def sio(flask_app):
 
 @pytest.fixture()
 def singed_nick():
-    nick = '@abdcd'
+    nick = 'abdcd'
     result = user.insert_one(
         {
             'name': 'test name',
-            'nick': nick,
+            'nick': f'@{nick}',
             'password': 'test_password'
         }
     )
