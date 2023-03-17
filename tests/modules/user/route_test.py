@@ -1,7 +1,7 @@
 from flask import url_for
 
 
-class TestUserRoutes:
+class TestPostUserRoutes:
     # Root route
     def test_post_method(self, client):
         post_data = {
