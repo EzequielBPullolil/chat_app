@@ -1,5 +1,7 @@
 from flask import Blueprint, request, make_response
 from bson import ObjectId
+
+from src.databases.mongodb import user
 from .helper.singed_user_nick import singed_user_nick
 from .exceptions import UserDomainException
 user_bp = Blueprint('user', __name__)
@@ -21,9 +23,14 @@ def sing_user():
         nick = data['nick']
         name = data['name']
         singed_user_nick(nick)
+        result = user.insert_one({
+            'name': name,
+            'nick': nick,
+            'password': password
+        })
         return {
             'user': {
-                '_id': str(ObjectId()),
+                '_id': str(result.inserted_id),
                 'name': name,
                 'nick': nick
             }
