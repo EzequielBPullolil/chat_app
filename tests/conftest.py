@@ -1,7 +1,7 @@
 from bson import ObjectId
 import pytest
 from src.app import app, socketio
-from src.databases.mongodb import chat
+from src.databases.mongodb import chat, user
 
 
 def pytest_configure():
@@ -74,6 +74,20 @@ def sio(flask_app):
         flask_test_client=flask_client
     )
     return sio
+
+
+@pytest.fixture()
+def singed_nick():
+    nick = '@abdcd'
+    result = user.insert_one(
+        {
+            'name': 'test name',
+            'nick': f"@{nick}",
+            'password': 'test_password'
+        }
+    )
+
+    return nick
 
 
 @pytest.fixture()
