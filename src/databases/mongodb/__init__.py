@@ -5,3 +5,4 @@ client = MongoClient(environ['MONGODB_URI'])
 db = client[environ['MONGODB_NAME']]
 
 chat = db['chats']
+user = db['users']

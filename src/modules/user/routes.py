@@ -1,5 +1,7 @@
 from flask import Blueprint, request, make_response
-
+from bson import ObjectId
+from .helper.singed_user_nick import singed_user_nick
+from .exceptions import UserDomainException
 user_bp = Blueprint('user', __name__)
 
 
@@ -18,8 +20,14 @@ def sing_user():
         password = data['password']
         nick = data['nick']
         name = data['name']
-
-        return {}, 201
+        singed_user_nick(nick)
+        return {
+            'user': {
+                '_id': str(ObjectId()),
+                'name': name,
+                'nick': nick
+            }
+        }, 201
 
     except KeyError:
         missings_param = ''
@@ -34,4 +42,8 @@ def sing_user():
 
         return {
             'error': f'missing {missings_param} payload data'
+        }, 400
+    except UserDomainException as e_info:
+        return {
+            'error': e_info.message
         }, 400
