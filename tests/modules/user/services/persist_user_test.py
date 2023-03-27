@@ -1,6 +1,7 @@
 from bson import ObjectId
 from src.databases.mongodb import user
 from src.modules.user.services.persist_user import persist_user
+import pytest
 
 
 class TestPersistUserService:
@@ -9,7 +10,7 @@ class TestPersistUserService:
             Validates if user are correctly persisted
         '''
         persisted_user = persist_user(
-            name='a test name', password='a test password', nick='@test')
+            name='a test name', password='a test password', nick='test')
 
         is_persisted = user.find_one(filter={
             '_id': ObjectId(persisted_user['_id'])
@@ -23,7 +24,7 @@ class TestPersistUserService:
         '''
         password = 'a password'
         persisted_user = persist_user(
-            name='a test name', password=password, nick='@test')
+            name='a test name', password=password, nick='test')
 
         persisted_user = user.find_one(filter={
             '_id': ObjectId(persisted_user['_id'])
@@ -48,3 +49,13 @@ class TestPersistUserService:
         assert persisted_user_nick != nick
 
         assert '@' in persisted_user_nick
+
+    def test_parse_nick_with_at_raise_error(self):
+        '''
+            Check if parse a nickname with '@' to persist_user function
+            raise error
+        '''
+        with pytest.raises(ValueError) as e_info:
+            persist_user('a name', 'a password', '@anick')
+
+            assert e_info.message == "the 'nick' field must not contain '@'"
