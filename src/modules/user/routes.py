@@ -1,7 +1,5 @@
 from flask import Blueprint, request, make_response
-from bson import ObjectId
 from src.modules.user.services.persist_user import persist_user
-from src.databases.mongodb import user
 from .helper.singed_user_nick import singed_user_nick
 from .exceptions import UserDomainException
 user_bp = Blueprint('user', __name__)
