@@ -8,6 +8,7 @@ def persist_user(name, password, nick) -> dict:
         and persist user to mongodb database
     '''
     password = password_encrypt(password)
+    nick = f'@{nick}'
     result = user.insert_one({
         'name': name,
         'password': password,

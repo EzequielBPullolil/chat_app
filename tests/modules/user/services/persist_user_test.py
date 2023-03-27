@@ -16,8 +16,6 @@ class TestPersistUserService:
         })
         assert is_persisted != None
 
-        self.persisted_user = is_persisted
-
     def test_user_password_was_encripted(self):
         '''
             Persist user and check if the password
@@ -32,3 +30,21 @@ class TestPersistUserService:
         })
 
         assert persisted_user['password'] != password
+
+    def test_user_nick_add_at(self):
+        '''
+            Validates if user nick have '@'
+            after  persist it
+        '''
+        nick = 'test'
+        persisted_user = persist_user(
+            name='a test name', password='a test password', nick=nick)
+
+        is_persisted = user.find_one(filter={
+            '_id': ObjectId(persisted_user['_id'])
+        })
+
+        persisted_user_nick = is_persisted['nick']
+        assert persisted_user_nick != nick
+
+        assert '@' in persisted_user_nick
