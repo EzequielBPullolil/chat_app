@@ -20,9 +20,10 @@ class TestPostUserRoutes:
         assert responsed_user['name'] == post_data['name']
         assert responsed_user['nick'] == post_data['nick']
 
-        assert user.find_one(filter={
+        is_persisted_user = user.find_one(filter={
             '_id': ObjectId(responsed_user['_id'])
-        }) != None
+        })
+        assert is_persisted_user != None
 
     def test_missing_password_data_response_status_400(self, client):
         post_data = {
