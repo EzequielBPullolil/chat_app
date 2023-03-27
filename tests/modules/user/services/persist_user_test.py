@@ -14,5 +14,21 @@ class TestPersistUserService:
         is_persisted = user.find_one(filter={
             '_id': ObjectId(persisted_user['_id'])
         })
-
         assert is_persisted != None
+
+        self.persisted_user = is_persisted
+
+    def test_user_password_was_encripted(self):
+        '''
+            Persist user and check if the password
+            was encripted
+        '''
+        password = 'a password'
+        persisted_user = persist_user(
+            name='a test name', password=password, nick='@test')
+
+        persisted_user = user.find_one(filter={
+            '_id': ObjectId(persisted_user['_id'])
+        })
+
+        assert persisted_user['password'] != password
